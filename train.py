@@ -21,7 +21,7 @@ class UltimateFrisbee(gym.Env):
         self.observation_upper_bound = np.array([1, self.field_width, self.field_length, 1])
         self.observation_dtype = np.array([np.uint8, np.float32, np.float32, np.uint8])
         
-        self.action_space = spaces.Discrete(8) # Box for more realistic speed (would have to incorporate tiredness)
+        self.action_space = spaces.Discrete(8) # Box for more realistic changes of direction (would have to incorporate tiredness)
         self.observation_space = spaces.Box(low=self.observation_lower_bound, high=self.observation_upper_bound, shape=(num_agents * self.characteristics_per_agent), dtype=self.observation_dtype)
 
 
@@ -29,6 +29,17 @@ class UltimateFrisbee(gym.Env):
     def step(self, action):
         step_reward = np.zeros(self.num_agents)
         done = False
+        # penalize offense, reward defense
+        for i in range(self.num_agents/2):
+            step_reward[i] -= 1.
+        for i in range(self.num_agents/2., self.num_agents):
+            step_reward[i] += 1.
+        
+        # do actions. Penalize if player out of bounds and return to field
+
+        # check if turnover
+
+        # check if frisbee in endzone
 
 
 
@@ -50,10 +61,14 @@ class UltimateFrisbee(gym.Env):
             self.state[i] = self.field_width/(self.num_agents+2) * (i+1) # x
             self.state[i+1] = 95. # y
 
-        # give defense frisbee for pull
+        # give defense frisbee for pull. make sure to reset all people with frisbee
 
         return self.state
 
     def render(self): # pyglet??
 
-    def close(self)
+        return
+
+    def close(self): # close render
+
+        return
