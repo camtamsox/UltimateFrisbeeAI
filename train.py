@@ -3,8 +3,15 @@ import gym
 from gym import spaces
 import numpy as np
 import random
-
 from shapely.geometry.polygon import Polygon
+
+
+from tf_agents.environments import gym_wrapper, tf_py_environment
+from tf_agents.replay_buffers import tf_uniform_replay_buffer
+from tf_agents.trajectories import trajectory
+import tf_agents.trajectories.time_step as ts
+from tf_agents.utils import common
+from tf_agents.policies.policy_saver import PolicySaver
 
 
 def move_action(x, y, direction, player_step_size):
@@ -144,15 +151,23 @@ class UltimateFrisbee(gym.Env):
         for i in range(1, self.num_agents/2 * self.characteristics_per_agent, 4): # offense
             # evenly separate so that no player is on sideline
             self.state[i] = self.field_width/(self.num_agents+2) * (i+1) # x
-            self.state[i+1] = 25. # y
+            self.state[i+1] = self.endzone_length # y
 
         for i in range(1 + self.num_agents/2 * self.characteristics_per_agent, self.num_agents * self.characteristics_per_agent, 4): # defense
             # evenly separate so that no player is on sideline
             self.state[i] = self.field_width/(self.num_agents+2) * (i+1) # x
-            self.state[i+1] = 95. # y
+            self.state[i+1] = self.field_length - self.endzone_length # y
 
-        # give defense frisbee for pull. make sure to reset all people with frisbee
+        # randomly choose who gets frisbee
+        for player_num in range(self.num_agents/2): 
+            self.state[player_num * self.num_player_observations + 3] = 0
+        player_with_frisbee = random.randint(0,self.num_agents-1)
+        self.state[player_with_frisbee * self.num_player_observations + 3] = 1
+
 
         return self.state
 
     # def visualize(self):
+
+
+# For ML part, I was thinking of doing something like this: https://github.com/rmsander/marl_ppo/blob/main/ppo/ppo_marl.py
