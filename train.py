@@ -4,6 +4,8 @@ from gym import spaces
 import numpy as np
 import random
 from shapely.geometry.polygon import Polygon
+from datetime import datetime
+import os
 
 
 from tf_agents.environments import gym_wrapper, tf_py_environment
@@ -12,6 +14,14 @@ from tf_agents.trajectories import trajectory
 import tf_agents.trajectories.time_step as ts
 from tf_agents.utils import common
 from tf_agents.policies.policy_saver import PolicySaver
+
+from tf_agents.networks.actor_distribution_network import ActorDistributionNetwork
+from tf_agents.networks.actor_distribution_rnn_network import ActorDistributionRnnNetwork
+from tf_agents.networks.value_network import ValueNetwork
+from tf_agents.networks.value_rnn_network import ValueRnnNetwork
+from tf_agents.agents.ppo import ppo_agent, ppo_policy
+
+from tensorflow.python.client import device_lib
 
 
 def move_action(x, y, direction, player_step_size):
@@ -171,3 +181,185 @@ class UltimateFrisbee(gym.Env):
 
 
 # For ML part, I was thinking of doing something like this: https://github.com/rmsander/marl_ppo/blob/main/ppo/ppo_marl.py
+
+
+class PPOTrainer:
+    
+    def __init__(self, ppo_agents, train_env, eval_env, use_tensorboard=True, add_to_video=True, use_lstm=False, total_epochs=1000, collect_steps_per_episode=1000,
+                eval_interval=100, num_eval_episodes=5, epsilon=0.0, save_interval=500, log_interval=1, experiment_name=""):
+
+        self.train_env = train_env
+        self.eval_env = eval_env
+
+        self.use_lstm=use_lstm
+        self.num_agents = 14
+
+        self.max_buffer_size = collect_steps_per_episode
+        self.collect_steps_per_episode = collect_steps_per_episode
+        self.epochs = total_epochs
+        self.global_step = 0 # global step count
+        self.epsilon = epsilon # probability of using greedy policy
+
+        self.agents = ppo_agents
+        for agent in self.agents:
+            agent.initialize()
+        
+        self.actor_nets = []
+        self.value_nets = []
+        self.eval_policies = []
+        self.collect_policies = []
+        self.replay_buffers = []
+        for i in range(self.num_agents):
+            self.actor_nets.append(self.agents[i]._actor_net)
+            self.value_nets.append(self.agents[i]._value_net)
+            self.eval_policies.append(self.agents[i].policy)
+            self.collect_policies.append(self.agents[i].collect_policy)
+            self.replay_buffers.append(
+                tf_uniform_replay_buffer.TFUniformReplayBuffer(
+                    self.agents[i].collect_data_spec,
+                    batch_size=self.train_env.batch_size,
+                    max_length=self.max_buffer_size))
+
+        self.num_eval_episodes = num_eval_episodes
+        self.eval_interval = eval_interval
+        self.eval_returns = []
+        for i in range(self.num_agents):
+            self.eval_returns.append([])
+        # logging
+        self.time_string = datetime.now().strftime("%Y-%m-%d-%H%M")
+        self.log_interval = log_interval
+
+        # creating video
+        self.video_train = []
+        self.video_eval = []
+        self.add_to_video = add_to_video
+        self.FPS = 50
+
+        # saving
+        self.policy_save_dir = os.path.join(os.path.split(__file__)[0], "models", experiment_name.format(self.time_string))
+        self.save_interval = save_interval
+        if not os.path.exists(self.policy_save_dir):
+            print("Directory {} does not exist. Creating it now".format(self.policy_save_dir))
+            os.makedirs(self.policy_save_dir, exist_ok=True)
+    
+        self.train_savers = []
+        self.eval_savers = []
+        for i in range(self.num_agents):
+            self.train_savers.append(PolicySaver(self.collect_policies[i], batch_size=None))
+            self.eval_savers.append(PolicySaver(self.eval_policies[i], batch_size=None))
+
+        # tensorboard
+
+
+        # devices
+        local_devices = device_lib.list_local_devices()
+        num_gpus = len([x.name for x in local_devices if x.device_type == 'GPU'])
+        self.use_gpu = num_gpus > 0
+
+    def is_last(self, mode='train'): # not sure if I need this because env should say if the episode is done
+        if mode == 'train':
+            step_types = self.train_env.current_time_step().step_type.numpy()
+        elif mode == 'eval':
+            step_types = self.eval_env.current_time_step().step_type.numpy()
+        
+        is_last = bool(min(np.count_nonzero(step_types == 2), 1)) # not sure why min is used
+        return is_last
+    
+    def get_agent_timesteps(self, time_step, step_type): # create timestep compatible w/ tf-agents
+        discount = time_step.discount # will this be list/array?
+        discount = tf.convert_to_tensor(discount, dtype=tf.float32, name='discount')
+
+        rewards = []
+        for i in range(self.num_agents):
+            rewards.append(tf.convert_to_tensor(time_step.reward[i], dtype=tf.float32, name='reward'))
+
+        processed_observations = self.process_observations(time_step)
+        new_time_steps = []
+        for i in range(self.num_agents):
+            new_time_steps.append(ts.TimeStep(step_type, rewards[i], discount, processed_observations))
+        return new_time_steps
+
+    def process_observations(self, time_step):
+        # placeholder for doing partial observations of environment
+
+        processed_observations = time_step.observations
+        return processed_observations
+
+    # collect steps
+    def collect_step(self, step=0, use_greedy=False, add_to_video=False):
+        time_step = self.train_env.current_time_step()
+        agent_timesteps = self.get_agent_timesteps(time_step, time_step.step_type) # step_type might be an array
+
+        actions = []
+        action_steps = []
+        for i in range(self.num_agents):
+            agent_ts = agent_timesteps[i]
+            action_steps.append(self.collect_policies[i].action(agent_ts))
+            actions.append(action_steps[i].action)
+
+        # tensorboard
+
+
+
+        action_tensor = tf.convert_to_tensor([tf.stack(tuple(actions), axis=1)])
+
+        next_time_step = self.train_env.step(action_tensor)
+        next_agent_timesteps = self.get_agent_timesteps(next_time_step, next_time_step.step_type)
+        for i in range(self.num_agents):
+            traj = trajectory.from_transition(agent_timesteps[i], action_steps[i], next_agent_timesteps[i])
+            self.replay_buffers[i].add_batch(traj)
+
+        # add observation to video
+
+
+
+
+        rewards = []
+        for i in range(self.num_agents):
+            rewards.append(agent_timesteps[i].reward)
+        return rewards
+
+
+    # collect episode
+
+    # compute average reward
+
+    # collect step lstm
+
+    # reset policy states
+
+    # collect episode lstm
+
+    # compute average reward lstm
+
+    # train agents
+
+    # create video
+
+    # plot evaluation returns
+
+    # save policies
+
+    # load policies
+
+def make_networks(env, in_fc_params, out_fc_params, lstm_size, use_lstm=False):
+    
+    if use_lstm:
+        actor_net = ActorDistributionRnnNetwork(env.observation_spec(), env.action_spec(), conv_layer_params=[], input_fc_layer_params=in_fc_params, lstm_size=lstm_size, output_fc_layer_params=out_fc_params)
+
+        value_net = ValueRnnNetwork(env.observation_spec(), conv_layer_params=[], input_fc_layer_params=in_fc_params, lstm_size=lstm_size, output_fc_layer_params=out_fc_params)
+
+    else:
+        actor_net = ActorDistributionNetwork(env.observation_spec(), env.action_spec(), conv_layer_params=[])
+
+        value_net = ValueNetwork(env.observation_spec(), conv_layer_params=[])
+
+    return actor_net, value_net
+
+def make_agent(env, in_fc_params, out_fc_params, lstm_size, use_lstm=False, lr=8e-5):
+
+    actor_net, value_net = make_networks(env, in_fc_params, out_fc_params, lstm_size, use_lstm)
+
+    agent = ppo_agent.PPOAgent(env.time_step_spec(), env.action_spec(), actor_net=actor_net, value_net=value_net, optimizer=tf.compat.v1.train.AdamOptimizer(lr))
+
+    return agent
