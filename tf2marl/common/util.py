@@ -1,6 +1,7 @@
 import numpy as np
 from gym.spaces import Box, Discrete
 import tensorflow as tf
+from tf2marl.multiagent.environment import MultiAgentEnv
 
 def space_n_to_shape_n(space_n):
     """
