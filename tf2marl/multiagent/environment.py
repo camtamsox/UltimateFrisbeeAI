@@ -42,7 +42,7 @@ class MultiAgentEnv(gym.Env):
         for agent in self.agents:
 
             #action_space = MultiDiscrete([[0,8], [0,1], [0,6]]) # direction to change, throw frisbee?, who to throw to
-            self.action_space = [spaces.Discrete(9), spaces.Discrete(2), spaces.Discrete(7)]
+            self.action_space.append([spaces.Discrete(9), spaces.Discrete(2), spaces.Discrete(7)])
 
             obs_dim = len(observation_callback(self.world))
             self.observation_space.append(spaces.Box(low=-np.inf, high=+np.inf, shape=(obs_dim,), dtype=np.float32))
