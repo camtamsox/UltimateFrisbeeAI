@@ -127,9 +127,9 @@ def train(_run, exp_name, save_rate, display, restore_fp,
     env = make_env()
 
     # Create agents
-    agents = get_agents(_run, env, env.n_adversaries)
+    agents = get_agents(_run, env, env.agents_per_team)
 
-    logger = RLLogger(exp_name, _run, len(agents), env.n_adversaries, save_rate)
+    logger = RLLogger(exp_name, _run, len(agents), env.agents_per_team, save_rate)
 
     # Load previous results, if necessary
     if restore_fp is not None:
