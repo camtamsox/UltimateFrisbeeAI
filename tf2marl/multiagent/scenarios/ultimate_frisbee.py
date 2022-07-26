@@ -35,7 +35,7 @@ class Scenario(BaseScenario):
     def reset_world(self, world):
         # evenly separate along front of endzone
         for i in range(world.num_agents):
-            if world.agent[i].is_offense:
+            if world.agents[i].is_offense:
                 world.agents[i].x = world.field_width/(world.num_agents+1) * (i+1)
                 world.agents[i].y = world.endzone_length
             else:
