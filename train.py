@@ -1,365 +1,298 @@
+"""
+This file can be used to train an agent on a given environment, i.e. to replicate some
+results from the papers.
+"""
 
-import gym
-from gym import spaces
-import numpy as np
-import random
-from shapely.geometry.polygon import Polygon
-from datetime import datetime
+import time
 import os
+from typing import List
+
+import numpy as np
+import tensorflow as tf
+from sacred import Experiment
+from sacred.observers import FileStorageObserver
+
+from tf2marl.common.logger import RLLogger
+from tf2marl.agents import MADDPGAgent, MATD3Agent, MASACAgent, MAD3PGAgent
+from tf2marl.agents.AbstractAgent import AbstractAgent
+from tf2marl.multiagent.environment import MultiAgentEnv
+from tf2marl.common.util import softmax_to_argmax
+
+if tf.config.experimental.list_physical_devices('GPU'):
+    tf.config.experimental.set_memory_growth(tf.config.experimental.list_physical_devices('GPU')[0],
+                                             True)
+
+train_ex = Experiment('train')
 
 
-from tf_agents.environments import gym_wrapper, tf_py_environment
-from tf_agents.replay_buffers import tf_uniform_replay_buffer
-from tf_agents.trajectories import trajectory
-import tf_agents.trajectories.time_step as ts
-from tf_agents.utils import common
-from tf_agents.policies.policy_saver import PolicySaver
+# This file uses Sacred for logging purposes as well as for config management.
+# I recommend logging to a Mongo Database which can nicely be visualized with
+# Omniboard.
+@train_ex.config
+def train_config():
+    # Logging
+    exp_name = 'default'            # name for logging
 
-from tf_agents.networks.actor_distribution_network import ActorDistributionNetwork
-from tf_agents.networks.actor_distribution_rnn_network import ActorDistributionRnnNetwork
-from tf_agents.networks.value_network import ValueNetwork
-from tf_agents.networks.value_rnn_network import ValueRnnNetwork
-from tf_agents.agents.ppo import ppo_agent, ppo_policy
+    display = False                 # render environment
+    restore_fp = None               # path to restore models from, e.g.
+                                    # 'results/sacred/182/models', or None to train a new model
+    save_rate = 10                  # frequency to save policy as number of episodes
 
-from tensorflow.python.client import device_lib
+    # Environment
+    scenario_name = 'ultimate_frisbee' # environment name
+    num_episodes = 60000            # total episodes
+    max_episode_len = 100000            # timesteps per episodes
 
+    # Agent Parameters
+    good_policy = 'matd3'          # policy of "good" agents in env
+    adv_policy = 'matd3'           # policy of adversary agents in env
+    # available agent: maddpg, matd3, mad3pg, masac
 
-def move_action(x, y, direction, player_step_size):
-    if direction == 0: # up
-        y+=player_step_size
+    # General Training Hyperparameters
+    lr = 1e-2                       # learning rate for critics and policies
+    gamma = 0.95                    # decay used in environments
+    batch_size = 1024               # batch size for training
+    num_layers = 2                  # hidden layers per network
+    num_units = 64                  # units per hidden layer
 
-    if direction == 1: # up right
-        y+=player_step_size
-        x+=player_step_size
+    update_rate = 100               # update policy after each x steps
+    critic_zero_if_done = False     # set the value to zero in terminal steps
+    buff_size = 1e6                 # size of the replay buffer
+    tau = 0.01                      # Update for target networks
+    hard_max = False                # use Straight-Through (ST) Gumbel
 
-    if direction == 2: # right
-        x+=player_step_size
+    priori_replay = False           # enable prioritized replay
+    alpha = 0.6                     # alpha value (weights prioritization vs random)
+    beta = 0.5                      # beta value  (controls importance sampling)
 
-    if direction == 3: # down right
-        x+=player_step_size
-        y-=player_step_size
+    use_target_action = True        # use target action in environment, instead of normal action
 
-    if direction == 4: # down
-        y-=player_step_size
-
-    if direction == 5: # down left
-        x-=player_step_size
-        y-=player_step_size
-
-    if direction == 6: # left
-        x-=player_step_size
-
-    if direction == 7: # left up
-        x-=player_step_size
-        y+=player_step_size
-    return x, y
-
-def throw_frisbee_action(state, player_num, target_player_num, num_player_observations):
-    state[player_num * num_player_observations + 3] = 0 # player no longer has frisbee
-
-    catch_frisbee_probability = 0.9
-    if random.random() < catch_frisbee_probability:
-        state[target_player_num * num_player_observations + 3] = 1 # target player caught frisbee
-        turnover = False
+    # MATD3
+    if good_policy == 'tf2marl':
+        policy_update_rate = 2      # Frequency of policy updates, compared to critic
     else:
-        turnover = True
-
-    return state, turnover
-
-class UltimateFrisbee(gym.Env):
-
-    def __init__(self, num_agents=14, characteristics_per_agent=4): # characteristics_per_agent ideas: team, x, y, has frisbee, is throwing, speed, explosiveness, height, throwing ability, disc reading, tiredness...
-        self.characteristics_per_agent = characteristics_per_agent
-        self.num_agents = num_agents
-        self.reward = np.zeros(self.num_agents)
-        self.prev_reward = np.zeros(self.num_agents)
-        self.field_width = 40.
-        self.endzone_length = 25.
-        self.field_length = self.endzone_length * 2 + 70
-        self.player_step_size = 1.
-        
-        self.num_player_actions = 3
-        self.action_lower_bound = np.tile(np.array([0, 0, 0]), self.num_agents)     # [direction to change, throw frisbee?, who to throw to]
-        self.action_upper_bound = np.tile(np.array([7, 1, 1]), self.num_agents)    
-        
-        self.num_player_observations = 4
-        self.observation_lower_bound = np.tile(np.array([0, 0., 0., 0]), self.num_agents) # team, x, y, has frisbee
-        self.observation_upper_bound = np.tile(np.array([1, self.field_width, self.field_length, 1]))
-        self.observation_dtype = np.array([np.uint8, np.float32, np.float32, np.uint8])
-
-        self.action_space = spaces.Box(low=self.action_lower_bound, high=self.action_upper_bound, shape=(self.num_agents * 3), dtype=np.uint8) 
-        self.observation_space = spaces.Box(low=self.observation_lower_bound, high=self.observation_upper_bound, shape=(num_agents * self.characteristics_per_agent), dtype=self.observation_dtype)
-
-
-
-    def step(self, action):
-        step_reward = np.zeros(self.num_agents)
-        done = False
-        
-        if action is not None:
-            # penalize offense, reward defense
-            for i in range(self.num_agents/2):
-                step_reward[i] -= 1.
-            for i in range(self.num_agents/2, self.num_agents):
-                step_reward[i] += 1.
-
-            # Do actions
-            for player_num in self.num_agents:
-                # change x, y
-                old_x = self.state[player_num * self.num_player_observations + 1]
-                old_y = self.state[player_num * self.num_player_observations + 2]
-                direction = action[player_num * self.num_player_actions]
-                x, y = move_action(old_x, old_y, direction, self.player_step_size)
-                # check if out of bounds
-                if x < 0 or x > self.field_width:
-                    step_reward[player_num] -= 5
-                    x = old_x
-                if y < 0 or y > self.field_length:
-                    step_reward[player_num] -= 5
-                    y = old_y
-
-                self.state[player_num * self.num_player_observations + 1] = x
-                self.state[player_num * self.num_player_observations + 2] = y               
-
-
-                # throw frisbee
-                has_frisbee = self.state[player_num * self.num_player_observations + 3]
-                throw_frisbee = action[player_num * self.num_player_actions + 1]
-                if has_frisbee == 1 and throw_frisbee == 1:
-
-                    target_player_num = action[player_num * self.num_player_actions + 2]
-                    self.state, turnover = throw_frisbee_action(self.state, player_num, target_player_num, self.num_player_observations)
-
-                    if turnover:
-                        # penalize offense, reward defense
-                        for i in range(self.num_agents/2):
-                            step_reward[i] -= 1000.
-                        for i in range(self.num_agents/2, self.num_agents):
-                            step_reward[i] += 1000.
-                        done = True
-
-                        return self.state, step_reward, done, {}
-                    else:
-                        # check if frisbee is in endzone
-                        target_player_y = self.state[target_player_num * self.num_player_observations + 2]
-                        if target_player_y > (self.field_length - self.endzone_length):
-                            # reward offense, penalize defense
-                            for i in range(self.num_agents/2):
-                                step_reward[i] += 1000.
-                            for i in range(self.num_agents/2, self.num_agents):
-                                step_reward[i] -= 1000.
-                            done = True
-                            return self.state, step_reward, done, {}
-
-        return self.state, step_reward, done, {}
-
-    def reset(self, action):
-        self.reward = np.zeros(self.num_agents)
-        self.prev_reward = np.zeros(self.num_agents)
-
-        # reset positions of players
-        for i in range(1, self.num_agents/2 * self.characteristics_per_agent, 4): # offense
-            # evenly separate so that no player is on sideline
-            self.state[i] = self.field_width/(self.num_agents+2) * (i+1) # x
-            self.state[i+1] = self.endzone_length # y
-
-        for i in range(1 + self.num_agents/2 * self.characteristics_per_agent, self.num_agents * self.characteristics_per_agent, 4): # defense
-            # evenly separate so that no player is on sideline
-            self.state[i] = self.field_width/(self.num_agents+2) * (i+1) # x
-            self.state[i+1] = self.field_length - self.endzone_length # y
-
-        # randomly choose who gets frisbee
-        for player_num in range(self.num_agents/2): 
-            self.state[player_num * self.num_player_observations + 3] = 0
-        player_with_frisbee = random.randint(0,self.num_agents-1)
-        self.state[player_with_frisbee * self.num_player_observations + 3] = 1
-
-
-        return self.state
-
-    # def visualize(self):
-
-
-# For ML part, I was thinking of doing something like this: https://github.com/rmsander/marl_ppo/blob/main/ppo/ppo_marl.py
-
-
-class PPOTrainer:
-    
-    def __init__(self, ppo_agents, train_env, eval_env, use_tensorboard=True, add_to_video=True, use_lstm=False, total_epochs=1000, collect_steps_per_episode=1000,
-                eval_interval=100, num_eval_episodes=5, epsilon=0.0, save_interval=500, log_interval=1, experiment_name=""):
-
-        self.train_env = train_env
-        self.eval_env = eval_env
-
-        self.use_lstm=use_lstm
-        self.num_agents = 14
-
-        self.max_buffer_size = collect_steps_per_episode
-        self.collect_steps_per_episode = collect_steps_per_episode
-        self.epochs = total_epochs
-        self.global_step = 0 # global step count
-        self.epsilon = epsilon # probability of using greedy policy
-
-        self.agents = ppo_agents
-        for agent in self.agents:
-            agent.initialize()
-        
-        self.actor_nets = []
-        self.value_nets = []
-        self.eval_policies = []
-        self.collect_policies = []
-        self.replay_buffers = []
-        for i in range(self.num_agents):
-            self.actor_nets.append(self.agents[i]._actor_net)
-            self.value_nets.append(self.agents[i]._value_net)
-            self.eval_policies.append(self.agents[i].policy)
-            self.collect_policies.append(self.agents[i].collect_policy)
-            self.replay_buffers.append(
-                tf_uniform_replay_buffer.TFUniformReplayBuffer(
-                    self.agents[i].collect_data_spec,
-                    batch_size=self.train_env.batch_size,
-                    max_length=self.max_buffer_size))
-
-        self.num_eval_episodes = num_eval_episodes
-        self.eval_interval = eval_interval
-        self.eval_returns = []
-        for i in range(self.num_agents):
-            self.eval_returns.append([])
-        # logging
-        self.time_string = datetime.now().strftime("%Y-%m-%d-%H%M")
-        self.log_interval = log_interval
-
-        # creating video
-        self.video_train = []
-        self.video_eval = []
-        self.add_to_video = add_to_video
-        self.FPS = 50
-
-        # saving
-        self.policy_save_dir = os.path.join(os.path.split(__file__)[0], "models", experiment_name.format(self.time_string))
-        self.save_interval = save_interval
-        if not os.path.exists(self.policy_save_dir):
-            print("Directory {} does not exist. Creating it now".format(self.policy_save_dir))
-            os.makedirs(self.policy_save_dir, exist_ok=True)
-    
-        self.train_savers = []
-        self.eval_savers = []
-        for i in range(self.num_agents):
-            self.train_savers.append(PolicySaver(self.collect_policies[i], batch_size=None))
-            self.eval_savers.append(PolicySaver(self.eval_policies[i], batch_size=None))
-
-        # tensorboard
-
-
-        # devices
-        local_devices = device_lib.list_local_devices()
-        num_gpus = len([x.name for x in local_devices if x.device_type == 'GPU'])
-        self.use_gpu = num_gpus > 0
-
-    def is_last(self, mode='train'): # not sure if I need this because env should say if the episode is done
-        if mode == 'train':
-            step_types = self.train_env.current_time_step().step_type.numpy()
-        elif mode == 'eval':
-            step_types = self.eval_env.current_time_step().step_type.numpy()
-        
-        is_last = bool(min(np.count_nonzero(step_types == 2), 1)) # not sure why min is used
-        return is_last
-    
-    def get_agent_timesteps(self, time_step, step_type): # create timestep compatible w/ tf-agents
-        discount = time_step.discount # will this be list/array?
-        discount = tf.convert_to_tensor(discount, dtype=tf.float32, name='discount')
-
-        rewards = []
-        for i in range(self.num_agents):
-            rewards.append(tf.convert_to_tensor(time_step.reward[i], dtype=tf.float32, name='reward'))
-
-        processed_observations = self.process_observations(time_step)
-        new_time_steps = []
-        for i in range(self.num_agents):
-            new_time_steps.append(ts.TimeStep(step_type, rewards[i], discount, processed_observations))
-        return new_time_steps
-
-    def process_observations(self, time_step):
-        # placeholder for doing partial observations of environment
-
-        processed_observations = time_step.observations
-        return processed_observations
-
-    # collect steps
-    def collect_step(self, step=0, use_greedy=False, add_to_video=False):
-        time_step = self.train_env.current_time_step()
-        agent_timesteps = self.get_agent_timesteps(time_step, time_step.step_type) # step_type might be an array
-
-        actions = []
-        action_steps = []
-        for i in range(self.num_agents):
-            agent_ts = agent_timesteps[i]
-            action_steps.append(self.collect_policies[i].action(agent_ts))
-            actions.append(action_steps[i].action)
-
-        # tensorboard
-
-
-
-        action_tensor = tf.convert_to_tensor([tf.stack(tuple(actions), axis=1)])
-
-        next_time_step = self.train_env.step(action_tensor)
-        next_agent_timesteps = self.get_agent_timesteps(next_time_step, next_time_step.step_type)
-        for i in range(self.num_agents):
-            traj = trajectory.from_transition(agent_timesteps[i], action_steps[i], next_agent_timesteps[i])
-            self.replay_buffers[i].add_batch(traj)
-
-        # add observation to video
-
-
-
-
-        rewards = []
-        for i in range(self.num_agents):
-            rewards.append(agent_timesteps[i].reward)
-        return rewards
-
-
-    # collect episode
-
-    # compute average reward
-
-    # collect step lstm
-
-    # reset policy states
-
-    # collect episode lstm
-
-    # compute average reward lstm
-
-    # train agents
-
-    # create video
-
-    # plot evaluation returns
-
-    # save policies
-
-    # load policies
-
-def make_networks(env, in_fc_params, out_fc_params, lstm_size, use_lstm=False):
-    
-    if use_lstm:
-        actor_net = ActorDistributionRnnNetwork(env.observation_spec(), env.action_spec(), conv_layer_params=[], input_fc_layer_params=in_fc_params, lstm_size=lstm_size, output_fc_layer_params=out_fc_params)
-
-        value_net = ValueRnnNetwork(env.observation_spec(), conv_layer_params=[], input_fc_layer_params=in_fc_params, lstm_size=lstm_size, output_fc_layer_params=out_fc_params)
-
-    else:
-        actor_net = ActorDistributionNetwork(env.observation_spec(), env.action_spec(), conv_layer_params=[])
-
-        value_net = ValueNetwork(env.observation_spec(), conv_layer_params=[])
-
-    return actor_net, value_net
-
-def make_agent(env, in_fc_params, out_fc_params, lstm_size, use_lstm=False, lr=8e-5):
-
-    actor_net, value_net = make_networks(env, in_fc_params, out_fc_params, lstm_size, use_lstm)
-
-    agent = ppo_agent.PPOAgent(env.time_step_spec(), env.action_spec(), actor_net=actor_net, value_net=value_net, optimizer=tf.compat.v1.train.AdamOptimizer(lr))
-
-    return agent
+        policy_update_rate = 1
+    critic_action_noise_stddev = 0.0  # Added noise in critic updates
+    action_noise_clip = 0.5         # limit for this noise
+
+    # MASAC
+    entropy_coeff = 0.05            # weight for entropy in Soft-Actor-Critic
+
+    # MAD3PG
+    num_atoms = 51                  # number of atoms in support
+    min_val = -400                  # minimum atom value
+    max_val = 0                     # largest atom value
+
+
+@train_ex.capture
+def make_env(scenario_name) -> MultiAgentEnv:
+    """
+    Create an environment
+    :param scenario_name:
+    :return:
+    """
+    import tf2marl.multiagent.scenarios as scenarios
+
+    # load scenario from script
+    scenario = scenarios.load(scenario_name + '.py').Scenario()
+    # create world
+    world = scenario.make_world()
+    env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation)
+    return env
+
+
+@train_ex.main
+def train(_run, exp_name, save_rate, display, restore_fp,
+          hard_max, max_episode_len, num_episodes, batch_size, update_rate,
+          use_target_action):
+    """
+    This is the main training function, which includes the setup and training loop.
+    It is meant to be called automatically by sacred, but can be used without it as well.
+
+    :param _run:            Sacred _run object for legging
+    :param exp_name:        (str) Name of the experiment
+    :param save_rate:       (int) Frequency to save networks at
+    :param display:         (bool) Render the environment
+    :param restore_fp:      (str)  File-Patch to policy to restore_fp or None if not wanted.
+    :param hard_max:        (bool) Only output one action
+    :param max_episode_len: (int) number of transitions per episode
+    :param num_episodes:    (int) number of episodes
+    :param batch_size:      (int) batch size for updates
+    :param update_rate:     (int) perform critic update every n environment steps
+    :param use_target_action:   (bool) use action from target network
+    :return:    List of episodic rewards
+    """
+    # Create environment
+    print(_run.config)
+    env = make_env()
+
+    # Create agents
+    agents = get_agents(_run, env, env.n_adversaries)
+
+    logger = RLLogger(exp_name, _run, len(agents), env.n_adversaries, save_rate)
+
+    # Load previous results, if necessary
+    if restore_fp is not None:
+        print('Loading previous state...')
+        for ag_idx, agent in enumerate(agents):
+            fp = os.path.join(restore_fp, 'agent_{}'.format(ag_idx))
+            agent.load(fp)
+
+    obs_n = env.reset()
+
+    print('Starting iterations...')
+    while True:
+        # get action
+        if use_target_action:
+            action_n = [agent.target_action(obs.astype(np.float32)[None])[0] for agent, obs in
+                        zip(agents, obs_n)]
+        else:
+            action_n = [agent.action(obs.astype(np.float32)) for agent, obs in zip(agents, obs_n)]
+        # environment step
+        if hard_max:
+            hard_action_n = softmax_to_argmax(action_n, agents)
+            new_obs_n, rew_n, done_n, info_n = env.step(hard_action_n)
+        else:
+            action_n = [action.numpy() for action in action_n]
+            new_obs_n, rew_n, done_n, info_n = env.step(action_n)
+
+        logger.episode_step += 1
+
+        done = all(done_n)
+        terminal = (logger.episode_step >= max_episode_len)
+        done = done or terminal
+
+        # collect experience
+        for i, agent in enumerate(agents):
+            agent.add_transition(obs_n, action_n, rew_n[i], new_obs_n, done)
+        obs_n = new_obs_n
+
+        for ag_idx, rew in enumerate(rew_n):
+            logger.cur_episode_reward += rew
+            logger.agent_rewards[ag_idx][-1] += rew
+
+        if done:
+            obs_n = env.reset()
+            episode_step = 0
+            logger.record_episode_end(agents)
+
+        logger.train_step += 1
+
+        # policy updates
+        train_cond = not display
+        for agent in agents:
+            if train_cond and len(agent.replay_buffer) > batch_size * max_episode_len:
+                if logger.train_step % update_rate == 0:  # only update every 100 steps
+                    q_loss, pol_loss = agent.update(agents, logger.train_step)
+
+        # for displaying learned policies
+        if display:
+            time.sleep(0.1)
+            env.render()
+
+        # saves logger outputs to a file similar to the way in the original MADDPG implementation
+        if len(logger.episode_rewards) > num_episodes:
+            logger.experiment_end()
+            return logger.get_sacred_results()
+
+
+@train_ex.capture
+def get_agents(_run, env, num_adversaries, good_policy, adv_policy, lr, batch_size,
+               buff_size, num_units, num_layers, gamma, tau, priori_replay, alpha, num_episodes,
+               max_episode_len, beta, policy_update_rate, critic_action_noise_stddev,
+               entropy_coeff, num_atoms, min_val, max_val) -> List[AbstractAgent]:
+    """
+    This function generates the agents for the environment. The parameters are meant to be filled
+    by sacred, and are therefore documented in the configuration function train_config.
+
+    :returns List[AbstractAgent] returns a list of instantiated agents
+    """
+    agents = []
+    for agent_idx in range(num_adversaries):
+        if adv_policy == 'maddpg':
+            agent = MADDPGAgent(env.observation_space, env.action_space, agent_idx, batch_size,
+                                buff_size,
+                                lr, num_layers,
+                                num_units, gamma, tau, priori_replay, alpha=alpha,
+                                max_step=num_episodes * max_episode_len, initial_beta=beta,
+                                _run=_run)
+        elif adv_policy == 'matd3':
+            agent = MATD3Agent(env.observation_space, env.action_space, agent_idx, batch_size,
+                               buff_size,
+                               lr, num_layers,
+                               num_units, gamma, tau, priori_replay, alpha=alpha,
+                               max_step=num_episodes * max_episode_len, initial_beta=beta,
+                               policy_update_freq=policy_update_rate,
+                               target_policy_smoothing_eps=critic_action_noise_stddev, _run=_run
+                               )
+        elif adv_policy == 'mad3pg':
+            agent = MAD3PGAgent(env.observation_space, env.action_space, agent_idx, batch_size,
+                                buff_size,
+                                lr, num_layers,
+                                num_units, gamma, tau, priori_replay, alpha=alpha,
+                                max_step=num_episodes * max_episode_len, initial_beta=beta,
+                                num_atoms=num_atoms, min_val=min_val, max_val=max_val,
+                                _run=_run
+                                )
+        elif good_policy == 'masac':
+            agent = MASACAgent(env.observation_space, env.action_space, agent_idx, batch_size,
+                               buff_size,
+                               lr, num_layers, num_units, gamma, tau, priori_replay, alpha=alpha,
+                               max_step=num_episodes * max_episode_len, initial_beta=beta,
+                               entropy_coeff=entropy_coeff, policy_update_freq=policy_update_rate,
+                               _run=_run
+                               )
+        else:
+            raise RuntimeError('Invalid Class')
+        agents.append(agent)
+    for agent_idx in range(num_adversaries, env.n):
+        if good_policy == 'maddpg':
+            agent = MADDPGAgent(env.observation_space, env.action_space, agent_idx, batch_size,
+                                buff_size,
+                                lr, num_layers,
+                                num_units, gamma, tau, priori_replay, alpha=alpha,
+                                max_step=num_episodes * max_episode_len, initial_beta=beta,
+                                _run=_run)
+        elif good_policy == 'matd3':
+            agent = MATD3Agent(env.observation_space, env.action_space, agent_idx, batch_size,
+                               buff_size,
+                               lr, num_layers, num_units, gamma, tau, priori_replay, alpha=alpha,
+                               max_step=num_episodes * max_episode_len, initial_beta=beta,
+                               policy_update_freq=policy_update_rate,
+                               target_policy_smoothing_eps=critic_action_noise_stddev, _run=_run
+                               )
+        elif adv_policy == 'mad3pg':
+            agent = MAD3PGAgent(env.observation_space, env.action_space, agent_idx, batch_size,
+                                buff_size,
+                                lr, num_layers,
+                                num_units, gamma, tau, priori_replay, alpha=alpha,
+                                max_step=num_episodes * max_episode_len, initial_beta=beta,
+                                num_atoms=num_atoms, min_val=min_val, max_val=max_val,
+                                _run=_run
+                                )
+        elif good_policy == 'masac':
+            agent = MASACAgent(env.observation_space, env.action_space, agent_idx, batch_size,
+                               buff_size,
+                               lr, num_layers, num_units, gamma, tau, priori_replay, alpha=alpha,
+                               max_step=num_episodes * max_episode_len, initial_beta=beta,
+                               entropy_coeff=entropy_coeff, policy_update_freq=policy_update_rate,
+                               _run=_run
+                               )
+        else:
+            raise RuntimeError('Invalid Class')
+        agents.append(agent)
+    print('Using good policy {} and adv policy {}'.format(good_policy, adv_policy))
+    return agents
+
+
+def main():
+    file_observer = FileStorageObserver.create(os.path.join('results', 'sacred'))
+    # use this code to attach a mongo database for logging
+    # mongo_observer = MongoObserver(url='localhost:27017', db_name='sacred')
+    # train_ex.observers.append(mongo_observer)
+    train_ex.observers.append(file_observer)
+    train_ex.run_commandline()
+
+
+if __name__ == '__main__':
+    main()
