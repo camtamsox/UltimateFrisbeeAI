@@ -57,7 +57,7 @@ def train_config():
 
     update_rate = 100               # update policy after each x steps
     critic_zero_if_done = False     # set the value to zero in terminal steps
-    buff_size = 1e5                 # size of the replay buffer (changed from 1e6)
+    buff_size = 1e6                 # size of the replay buffer
     tau = 0.01                      # Update for target networks
     hard_max = False                # use Straight-Through (ST) Gumbel
 
