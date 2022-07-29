@@ -34,6 +34,8 @@ class Scenario(BaseScenario):
 
     def reset_world(self, world):
         # evenly separate along front of endzone
+        world.done = False
+        world.turnover = False
         for i in range(world.num_agents):
             if world.agents[i].is_offense:
                 world.agents[i].x = world.field_width/(world.num_agents+1) * (i+1)
@@ -69,13 +71,14 @@ class Scenario(BaseScenario):
                 world.done = True
 
         # check if player is in bounds
-        if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.length:
+        if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.field_length:
             reward -=5
         
         # check if turnover has occured
         if world.turnover:
             reward += 1000
             world.done = True
+            print('done: turnover')
 
         return reward
 
@@ -88,9 +91,10 @@ class Scenario(BaseScenario):
             if offense_agent.has_frisbee and offense_agent.y > world.field_length:
                 reward += 1000
                 world.done = True
+                print('done: frisbee in endzone')
 
         # check if player is in bounds
-        if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.length:
+        if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.field_length:
             reward -=5
         
         if world.turnover:

@@ -1,0 +1,26 @@
+{'exp_name': 'default', 'display': False, 'restore_fp': None, 'save_rate': 10, 'scenario_name': 'ultimate_frisbee', 'num_episodes': 60000, 'max_episode_len': 10000, 'good_policy': 'matd3', 'adv_policy': 'matd3', 'lr': 0.01, 'gamma': 0.95, 'batch_size': 1024, 'num_layers': 2, 'num_units': 64, 'update_rate': 100, 'critic_zero_if_done': False, 'buff_size': 100000.0, 'tau': 0.01, 'hard_max': False, 'priori_replay': False, 'alpha': 0.6, 'beta': 0.5, 'use_target_action': True, 'policy_update_rate': 1, 'critic_action_noise_stddev': 0.0, 'action_noise_clip': 0.5, 'entropy_coeff': 0.05, 'num_atoms': 51, 'min_val': -400, 'max_val': 0, 'seed': 980243253}
+C:\Users\camta\miniconda3\lib\site-packages\keras\optimizers\optimizer_v2\adam.py:110: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
+  super(Adam, self).__init__(name, **kwargs)
+Using good policy matd3 and adv policy matd3
+20
+Starting iterations...
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\fromnumeric.py:3432: RuntimeWarning: Mean of empty slice.
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\_methods.py:190: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+steps: 11, episodes: 10, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.338
+steps: 21, episodes: 20, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 0.73
+steps: 31, episodes: 30, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.115
+steps: 41, episodes: 40, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.033
+steps: 51, episodes: 50, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.029
+steps: 61, episodes: 60, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.119
+steps: 71, episodes: 70, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.037
+steps: 81, episodes: 80, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.075
+steps: 91, episodes: 90, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.063
+steps: 101, episodes: 100, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 0.961
+steps: 111, episodes: 110, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 0.974
+steps: 121, episodes: 120, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 0.942
+steps: 131, episodes: 130, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.097
+steps: 141, episodes: 140, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 1.049
+steps: 151, episodes: 150, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 0.945
+steps: 161, episodes: 160, mean episode reward: 0.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 1001.0], time: 0.998

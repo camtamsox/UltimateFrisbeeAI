@@ -133,31 +133,32 @@ class World(object):
 
     def move_agents(self):
         for agent in self.agents:
-            if agent.action.direction_to_change == 1: # up
+            # do nothing if agent.direction_to_change == 0
+            if agent.direction_to_change == 1: # up
                 agent.y += self.player_step_size
 
-            if agent.action.direction_to_change == 2: # up right
+            if agent.direction_to_change == 2: # up right
                 agent.y += self.player_step_size
                 agent.x += self.player_step_size
 
-            if agent.action.direction_to_change == 3: # right
+            if agent.direction_to_change == 3: # right
                 agent.x += self.player_step_size
 
-            if agent.action.direction_to_change == 4: # down right
+            if agent.direction_to_change == 4: # down right
                 agent.x += self.player_step_size
                 agent.y -= self.player_step_size
 
-            if agent.action.direction_to_change == 5: # down
+            if agent.direction_to_change == 5: # down
                 agent.y -= self.player_step_size
 
-            if agent.action.direction_to_change == 6: # down left
+            if agent.direction_to_change == 6: # down left
                 agent.x -= self.player_step_size
                 agent.y -= self.player_step_size
 
-            if agent.action.direction_to_change == 7: # left
+            if agent.direction_to_change == 7: # left
                 agent.x -= self.player_step_size
 
-            if agent.action.direction_to_change == 8: # left up
+            if agent.direction_to_change == 8: # left up
                 agent.x -= self.player_step_size
                 agent.y += self.player_step_size
 
@@ -165,7 +166,7 @@ class World(object):
         for agent in self.agents:
             if agent.has_frisbee:
                 if random() < self.catch_frisbee_probability:
-                    self.agents[agent.action.target_player_num].has_frisbee = True
+                    self.agents[agent.target_player_num].has_frisbee = True
                 else:
                     self.turnover = True
                 agent.has_frisbee = False
