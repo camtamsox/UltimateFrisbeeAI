@@ -165,8 +165,9 @@ class World(object):
     def throw_frisbee(self):
         for agent in self.agents:
             if agent.has_frisbee:
-                if random() < self.catch_frisbee_probability:
-                    self.agents[agent.target_player_num].has_frisbee = True
+                # probability of catching. target agent must be in bounds
+                if random() < self.catch_frisbee_probability and self.agents[agent.target_player_num].x > 0. and self.agents[agent.target_player_num].x < self.field_width and self.agents[agent.target_player_num].y > 0 and self.agents[agent.target_player_num].y < self.field_length:
+                        self.agents[agent.target_player_num].has_frisbee = True
                 else:
                     self.turnover = True
                 agent.has_frisbee = False

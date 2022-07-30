@@ -1,0 +1,319 @@
+{'exp_name': 'default', 'display': False, 'restore_fp': None, 'save_rate': 10, 'scenario_name': 'ultimate_frisbee', 'num_episodes': 60000, 'max_episode_len': 10000, 'good_policy': 'matd3', 'adv_policy': 'matd3', 'lr': 0.01, 'gamma': 0.95, 'batch_size': 1024, 'num_layers': 2, 'num_units': 64, 'update_rate': 100, 'critic_zero_if_done': False, 'buff_size': 100000.0, 'tau': 0.01, 'hard_max': False, 'priori_replay': False, 'alpha': 0.6, 'beta': 0.5, 'use_target_action': True, 'policy_update_rate': 1, 'critic_action_noise_stddev': 0.0, 'action_noise_clip': 0.5, 'entropy_coeff': 0.05, 'num_atoms': 51, 'min_val': -400, 'max_val': 0, 'seed': 533975690}
+C:\Users\camta\miniconda3\lib\site-packages\keras\optimizers\optimizer_v2\adam.py:110: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
+  super(Adam, self).__init__(name, **kwargs)
+Using good policy matd3 and adv policy matd3
+36
+Starting iterations...
+game has been saved!
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\fromnumeric.py:3432: RuntimeWarning: Mean of empty slice.
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\_methods.py:190: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 20074, episodes: 10, mean episode reward: -16175.555555555555, agent episode reward: [-7595.555555555556, -7546.111111111111, -7511.111111111111, -7549.444444444444, -7563.888888888889, -7560.555555555556, -2008.3333333333333, 4458.888888888889, 4470.0, 4469.444444444444, 4470.0, 4439.444444444444, 4430.555555555556, 4421.111111111111], time: 230.096
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 50141, episodes: 20, mean episode reward: -174182.22222222222, agent episode reward: [-20692.666666666668, -20619.333333333332, -20512.11111111111, -20627.666666666668, -20644.333333333332, -20642.666666666668, -4006.0, -6622.888888888889, -6583.444444444444, -6622.333333333333, -6616.777777777777, -6639.555555555556, -6671.777777777777, -6680.666666666667], time: 346.518
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 100159, episodes: 30, mean episode reward: -332072.77777777775, agent episode reward: [-33778.444444444445, -33649.555555555555, -33530.666666666664, -33704.555555555555, -33735.666666666664, -33729.555555555555, -6001.777777777777, -17714.88888888889, -17645.444444444445, -17742.666666666668, -17687.666666666668, -17611.0, -17766.0, -17774.88888888889], time: 568.418
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 140201, episodes: 40, mean episode reward: -183810.0, agent episode reward: [-20685.222222222223, -20618.0, -20509.666666666668, -20624.11111111111, -20643.0, -20641.333333333332, -13626.888888888889, -6622.555555555556, -6602.0, -6642.0, -6616.444444444444, -6635.333333333333, -6667.555555555556, -6675.888888888889], time: 454.132
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 160258, episodes: 50, mean episode reward: -95023.33333333333, agent episode reward: [-14131.333333333334, -14049.666666666666, -14006.333333333334, -14085.777777777777, -14099.111111111111, -14096.333333333334, -3004.6666666666665, -1082.0, -1058.111111111111, -1099.2222222222222, -1074.7777777777778, -997.0, -1117.0, -1122.0], time: 229.13
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 190295, episodes: 60, mean episode reward: -174148.88888888888, agent episode reward: [-20678.666666666668, -20617.0, -20508.11111111111, -20623.666666666668, -20642.0, -20640.333333333332, -4003.6666666666665, -6625.777777777777, -6584.666666666667, -6623.0, -6611.888888888889, -6655.222222222223, -6663.555555555556, -6671.333333333333], time: 343.118
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 220321, episodes: 70, mean episode reward: -95128.88888888889, agent episode reward: [-14120.111111111111, -14078.444444444445, -14007.333333333334, -14081.777777777777, -14097.888888888889, -14094.0, -3002.8888888888887, -1082.6666666666667, -1056.5555555555557, -1096.5555555555557, -1081.5555555555557, -1104.888888888889, -1109.888888888889, -1114.3333333333333], time: 343.674
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 220418, episodes: 80, mean episode reward: 62820.0, agent episode reward: [-1048.6666666666667, -1009.7777777777778, -1009.7777777777778, -1011.4444444444445, -1016.4444444444445, -1016.4444444444445, -1009.7777777777778, 10003.111111111111, 9999.222222222223, 9995.888888888889, 10008.666666666666, 9986.444444444445, 9978.111111111111, 9970.888888888889], time: 2.198
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 250495, episodes: 90, mean episode reward: -174245.55555555556, agent episode reward: [-20704.555555555555, -20599.0, -20514.0, -20634.0, -20661.222222222223, -20657.333333333332, -4007.8888888888887, -6633.222222222223, -6595.444444444444, -6654.888888888889, -6611.0, -6603.777777777777, -6680.444444444444, -6688.777777777777], time: 344.695
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 280536, episodes: 100, mean episode reward: -168494.44444444444, agent episode reward: [-20683.88888888889, -15192.222222222223, -20505.555555555555, -20625.0, -20642.777777777777, -20641.11111111111, -4004.4444444444443, -6626.111111111111, -6584.444444444444, -6643.888888888889, -6477.777777777777, -6523.888888888889, -6668.333333333333, -6675.0], time: 345.345
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 330554, episodes: 110, mean episode reward: -337705.0, agent episode reward: [-33779.11111111111, -33690.77777777778, -33508.555555555555, -33661.333333333336, -33735.22222222222, -33729.666666666664, -11514.111111111111, -17715.333333333332, -17643.11111111111, -17742.555555555555, -17708.11111111111, -17737.0, -17767.555555555555, -17772.555555555555], time: 575.193
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 360633, episodes: 120, mean episode reward: -95139.44444444444, agent episode reward: [-14153.777777777777, -14063.777777777777, -14009.888888888889, -14088.777777777777, -14105.444444444445, -14102.666666666666, -3008.777777777778, -1077.888888888889, -1056.2222222222222, -1097.888888888889, -1065.111111111111, -1045.6666666666667, -1127.3333333333333, -1136.2222222222222], time: 345.412
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 380664, episodes: 130, mean episode reward: -95111.66666666667, agent episode reward: [-14120.222222222223, -14078.555555555555, -14006.888888888889, -14084.111111111111, -14096.333333333334, -14094.111111111111, -3003.0, -1082.5555555555557, -1055.888888888889, -1094.7777777777778, -1073.111111111111, -1100.3333333333333, -1107.5555555555557, -1114.2222222222222], time: 217.948
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 400742, episodes: 140, mean episode reward: -95217.77777777778, agent episode reward: [-14147.0, -14083.111111111111, -14003.111111111111, -14088.666666666666, -14103.666666666666, -14100.888888888889, -3007.5555555555557, -1082.4444444444443, -1059.111111111111, -1101.3333333333333, -1069.111111111111, -1115.2222222222222, -1124.6666666666667, -1131.888888888889], time: 216.852
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 420797, episodes: 150, mean episode reward: -99273.88888888889, agent episode reward: [-14131.111111111111, -14080.555555555555, -14010.0, -14082.777777777777, -14104.444444444445, -14099.444444444445, -7110.555555555556, -1083.3333333333333, -1059.4444444444443, -1099.4444444444443, -1068.3333333333333, -1107.7777777777778, -1115.5555555555557, -1121.111111111111], time: 218.438
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 460855, episodes: 160, mean episode reward: -174053.88888888888, agent episode reward: [-20695.88888888889, -20578.666666666668, -20510.333333333332, -20629.777777777777, -20652.0, -20649.777777777777, -4006.4444444444443, -6625.777777777777, -6590.777777777777, -6650.777777777777, -6496.333333333333, -6609.111111111111, -6675.222222222223, -6683.0], time: 444.391
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 490909, episodes: 170, mean episode reward: -174024.44444444444, agent episode reward: [-20684.555555555555, -20597.333333333332, -20512.333333333332, -20621.777777777777, -20646.777777777777, -20641.222222222223, -4004.5555555555557, -6625.444444444444, -6584.888888888889, -6644.333333333333, -6500.444444444444, -6617.111111111111, -6668.222222222223, -6675.444444444444], time: 329.256
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 500981, episodes: 180, mean episode reward: -16166.111111111111, agent episode reward: [-7589.444444444444, -7545.0, -7512.222222222223, -7546.666666666667, -7557.777777777777, -7556.111111111111, -2007.2222222222222, 4460.0, 4471.111111111111, 4449.444444444444, 4468.888888888889, 4440.555555555556, 4433.333333333333, 4425.0], time: 113.077
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 541040, episodes: 190, mean episode reward: -168738.33333333334, agent episode reward: [-20696.0, -15222.666666666666, -20534.88888888889, -20626.0, -20649.88888888889, -20646.0, -4006.5555555555557, -6623.444444444444, -6586.777777777777, -6647.333333333333, -6498.444444444444, -6643.444444444444, -6674.0, -6682.888888888889], time: 447.302
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 561115, episodes: 200, mean episode reward: -95130.55555555556, agent episode reward: [-14136.111111111111, -14060.555555555555, -14009.444444444445, -14086.666666666666, -14105.555555555555, -14102.222222222223, -3005.5555555555557, -1085.0, -1061.111111111111, -1101.111111111111, -1070.5555555555557, -1063.3333333333333, -1118.3333333333333, -1125.0], time: 228.151
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 581206, episodes: 210, mean episode reward: -95171.66666666667, agent episode reward: [-14149.555555555555, -14086.222222222223, -14012.888888888889, -14094.555555555555, -14114.0, -14109.555555555555, -3007.8888888888887, -1091.0, -1063.7777777777778, -1103.7777777777778, -982.6666666666666, -1096.0, -1126.0, -1133.7777777777778], time: 225.745
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 601255, episodes: 220, mean episode reward: -100592.77777777778, agent episode reward: [-14131.555555555555, -14080.444444444445, -14004.333333333334, -14042.666666666666, -14101.555555555555, -14097.111111111111, -8501.0, -1083.4444444444443, -1052.3333333333333, -1097.3333333333333, -1077.888888888889, -1086.2222222222222, -1115.111111111111, -1121.7777777777778], time: 220.64
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 621336, episodes: 230, mean episode reward: -95058.33333333333, agent episode reward: [-14153.111111111111, -14063.666666666666, -14012.0, -14089.777777777777, -14109.222222222223, -14107.0, -3008.6666666666665, -1083.5555555555557, -1060.2222222222222, -1101.3333333333333, -946.8888888888889, -1059.6666666666667, -1127.4444444444443, -1135.7777777777778], time: 219.856
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 631482, episodes: 240, mean episode reward: -16430.555555555555, agent episode reward: [-7629.555555555556, -7559.0, -7539.555555555556, -7564.555555555556, -7584.0, -7579.555555555556, -2014.0, 4451.777777777777, 4457.888888888889, 4435.111111111111, 4466.777777777777, 4421.222222222223, 4408.444444444444, 4398.444444444444], time: 110.262
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 641533, episodes: 250, mean episode reward: -20467.777777777777, agent episode reward: [-7579.333333333333, -7543.222222222223, -7508.777777777777, -7547.666666666667, -7562.666666666667, -7557.666666666667, -6342.111111111111, 4456.0, 4485.444444444444, 4446.555555555556, 4456.555555555556, 4461.555555555556, 4436.0, 4431.555555555556], time: 114.007
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 671588, episodes: 260, mean episode reward: -168682.22222222222, agent episode reward: [-20688.0, -15219.666666666666, -20517.444444444445, -20626.88888888889, -20647.444444444445, -20641.88888888889, -4005.222222222222, -6619.777777777777, -6583.666666666667, -6644.222222222223, -6502.0, -6638.666666666667, -6669.777777777777, -6677.555555555556], time: 339.87
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 711639, episodes: 270, mean episode reward: -253256.11111111112, agent episode reward: [-27243.555555555555, -27156.333333333332, -27031.88888888889, -27166.333333333332, -27195.222222222223, -27188.0, -5005.222222222223, -12166.444444444445, -12115.333333333334, -12194.222222222223, -12147.555555555555, -12189.777777777777, -12223.111111111111, -12233.111111111111], time: 460.659
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+game has been saved!
+steps: 761667, episodes: 280, mean episode reward: -332247.77777777775, agent episode reward: [-33779.555555555555, -33690.666666666664, -33517.88888888889, -33703.444444444445, -33734.555555555555, -33729.555555555555, -6001.777777777777, -17713.222222222223, -17645.444444444445, -17742.666666666668, -17684.333333333332, -17759.333333333332, -17769.333333333332, -17776.0], time: 582.538
+game has been saved!
