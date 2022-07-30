@@ -65,7 +65,7 @@ def train_config():
     alpha = 0.6                     # alpha value (weights prioritization vs random)
     beta = 0.5                      # beta value  (controls importance sampling)
 
-    use_target_action = True        # use target action in environment, instead of normal action
+    use_target_action = True        # use target action in environment, instead of normal action ?????????????
 
     # MATD3
     if good_policy == 'tf2marl':
