@@ -1,0 +1,250 @@
+{'exp_name': 'default', 'display': False, 'restore_fp': None, 'save_rate': 10, 'scenario_name': 'ultimate_frisbee', 'num_episodes': 6000, 'max_episode_len': 10000, 'good_policy': 'matd3', 'adv_policy': 'matd3', 'lr': 0.01, 'gamma': 0.95, 'batch_size': 1024, 'num_layers': 2, 'num_units': 64, 'update_rate': 100, 'critic_zero_if_done': False, 'buff_size': 100000.0, 'tau': 0.01, 'hard_max': False, 'priori_replay': False, 'alpha': 0.6, 'beta': 0.5, 'use_target_action': True, 'policy_update_rate': 1, 'critic_action_noise_stddev': 0.0, 'action_noise_clip': 0.5, 'entropy_coeff': 0.05, 'num_atoms': 51, 'min_val': -400, 'max_val': 0, 'seed': 924864911}
+C:\Users\camta\miniconda3\lib\site-packages\keras\optimizers\optimizer_v2\adam.py:110: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
+  super(Adam, self).__init__(name, **kwargs)
+Using good policy matd3 and adv policy matd3
+63
+Starting iterations...
+throw
+turn
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\fromnumeric.py:3432: RuntimeWarning: Mean of empty slice.
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\_methods.py:190: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+turn
+turn
+steps: 205, episodes: 10, mean episode reward: -1150.0, agent episode reward: [-1109.3333333333333, -1116.5555555555557, -1076.0, -1022.6666666666666, -1124.3333333333333, -1099.888888888889, -1051.0, 913.2222222222222, 918.7777777777778, 959.3333333333334, 913.7777777777778, 909.3333333333334, 914.8888888888889, 920.4444444444445], time: 3.633
+throw
+turn
+throw
+throw
+turn
+throw
+steps: 215, episodes: 20, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 0.737
+throw
+turn
+throw
+throw
+throw
+steps: 225, episodes: 30, mean episode reward: -6.666666666666667, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1000.4444444444445], time: 1.111
+throw
+throw
+throw
+throw
+throw
+steps: 235, episodes: 40, mean episode reward: -7.777777777777778, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 998.7777777777778, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.063
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 245, episodes: 50, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.077
+throw
+turn
+throw
+throw
+throw
+throw
+steps: 255, episodes: 60, mean episode reward: -8.333333333333334, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 999.3333333333334, 996.0, 1001.0, 1001.0], time: 1.196
+throw
+throw
+throw
+throw
+throw
+steps: 265, episodes: 70, mean episode reward: -7.777777777777778, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.3333333333334, 996.0, 1001.0, 1001.0], time: 1.067
+throw
+throw
+throw
+throw
+steps: 275, episodes: 80, mean episode reward: -6.666666666666667, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.037
+throw
+throw
+throw
+throw
+steps: 285, episodes: 90, mean episode reward: -5.555555555555555, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.004
+throw
+throw
+throw
+throw
+steps: 295, episodes: 100, mean episode reward: -7.777777777777778, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 1.01
+throw
+throw
+turn
+turn
+steps: 305, episodes: 110, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 1.19
+throw
+throw
+throw
+throw
+steps: 315, episodes: 120, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.101
+throw
+throw
+throw
+throw
+steps: 325, episodes: 130, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 0.998
+throw
+throw
+throw
+throw
+throw
+steps: 335, episodes: 140, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.003
+throw
+throw
+throw
+throw
+throw
+steps: 345, episodes: 150, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 0.985
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 355, episodes: 160, mean episode reward: -5.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.147
+throw
+throw
+throw
+throw
+steps: 365, episodes: 170, mean episode reward: -6.666666666666667, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.062
+throw
+throw
+throw
+throw
+steps: 375, episodes: 180, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 0.991
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 385, episodes: 190, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.056
+throw
+throw
+throw
+throw
+throw
+steps: 395, episodes: 200, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 1.051
+throw
+throw
+turn
+throw
+steps: 405, episodes: 210, mean episode reward: -5.555555555555555, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.104
+throw
+throw
+turn
+throw
+throw
+steps: 415, episodes: 220, mean episode reward: -5.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.149
+throw
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 425, episodes: 230, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 1.076
+turn
+throw
+throw
+throw
+throw
+steps: 435, episodes: 240, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 0.972
+throw
+throw
+throw
+throw
+steps: 445, episodes: 250, mean episode reward: -5.555555555555555, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 0.986
+throw
+throw
+throw
+throw
+throw
+steps: 455, episodes: 260, mean episode reward: -5.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1001.0, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1001.0], time: 1.151
+throw
+throw
+throw
+steps: 465, episodes: 270, mean episode reward: -8.88888888888889, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 998.7777777777778, 1001.0, 1001.0, 999.3333333333334, 996.0, 1001.0, 1001.0], time: 1.052
+throw
+throw
+throw
+throw
+steps: 475, episodes: 280, mean episode reward: -10.0, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 998.2222222222222, 1001.0, 1001.0, 998.7777777777778, 996.0, 1001.0, 1001.0], time: 0.978
+throw
+throw
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 485, episodes: 290, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.033
+throw
+throw
+throw
+throw
+throw
+turn
+steps: 495, episodes: 300, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.052
+throw
+steps: 505, episodes: 310, mean episode reward: -8.333333333333334, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.3333333333334, 996.0, 1001.0, 1000.4444444444445], time: 1.108
+throw
+throw
+throw
+steps: 515, episodes: 320, mean episode reward: -8.333333333333334, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 999.3333333333334, 996.0, 1001.0, 1001.0], time: 1.092
+throw
+throw
+throw
+throw
+throw
+steps: 525, episodes: 330, mean episode reward: -8.333333333333334, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 999.3333333333334, 996.0, 1001.0, 1001.0], time: 1.045
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 535, episodes: 340, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 0.988
+throw
+throw
+throw
+throw
+throw
+throw
+steps: 545, episodes: 350, mean episode reward: -6.111111111111111, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 0.987
+throw
+throw
+throw
+steps: 555, episodes: 360, mean episode reward: -6.666666666666667, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 1000.4444444444445, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 1.109
+turn
+throw
+throw
+throw
+throw
+steps: 565, episodes: 370, mean episode reward: -8.333333333333334, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 998.7777777777778, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1000.4444444444445], time: 1.088
+throw
+throw
+steps: 575, episodes: 380, mean episode reward: -6.666666666666667, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 1001.0, 996.0, 1001.0, 1000.4444444444445], time: 0.971
+throw
+turn
+throw
+turn
+throw
+throw
+steps: 585, episodes: 390, mean episode reward: -8.88888888888889, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 998.2222222222222, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1001.0], time: 1.029
+throw
+throw
+steps: 595, episodes: 400, mean episode reward: -7.777777777777778, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.8888888888889, 1001.0, 1001.0, 999.8888888888889, 996.0, 1001.0, 1000.4444444444445], time: 1.02
+turn
+turn
+turn
+throw
+throw
+steps: 605, episodes: 410, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.088
+throw
+throw
+throw
+throw
+throw
+throw
+turn
+steps: 615, episodes: 420, mean episode reward: -7.222222222222222, agent episode reward: [-1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, -1001.0, 999.3333333333334, 1001.0, 1001.0, 1000.4444444444445, 996.0, 1001.0, 1001.0], time: 1.067

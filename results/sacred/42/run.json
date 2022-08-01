@@ -1,0 +1,189 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "C:\\Users\\camta\\Desktop\\Coding\\UltimateFrisbeeAI\\UltimateFrisbeeAI",
+    "dependencies": [
+      "numpy==1.23.1",
+      "sacred==0.8.2",
+      "tensorflow==2.9.1"
+    ],
+    "mainfile": "train.py",
+    "name": "train",
+    "repositories": [
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      },
+      {
+        "commit": "34e0d4c9d4c8e7d7e063da86ed12dc6a4741e855",
+        "dirty": true,
+        "url": "https://github.com/camtamsox/UltimateFrisbeeAI.git"
+      }
+    ],
+    "sources": [
+      [
+        "tf2marl\\__init__.py",
+        "_sources\\__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "tf2marl\\agents\\AbstractAgent.py",
+        "_sources\\AbstractAgent_80c905362ae0eb744cb60a36b67e4284.py"
+      ],
+      [
+        "tf2marl\\agents\\__init__.py",
+        "_sources\\__init___9a6daa8b314d3de07ce7c22c1c12d10c.py"
+      ],
+      [
+        "tf2marl\\agents\\mad3pg.py",
+        "_sources\\mad3pg_67e18f39237730c3271ee9fb7b1c521f.py"
+      ],
+      [
+        "tf2marl\\agents\\maddpg.py",
+        "_sources\\maddpg_653bd664142a9d9f93fb865fe8ac61d0.py"
+      ],
+      [
+        "tf2marl\\agents\\masac.py",
+        "_sources\\masac_3f97fe6b8a42135ffb9f6a988a26087c.py"
+      ],
+      [
+        "tf2marl\\agents\\matd3.py",
+        "_sources\\matd3_e1189e442ef8d7d325da452af12b14ba.py"
+      ],
+      [
+        "tf2marl\\common\\__init__.py",
+        "_sources\\__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "tf2marl\\common\\logger.py",
+        "_sources\\logger_cd041bc34b49684cd6cccfb6a1011091.py"
+      ],
+      [
+        "tf2marl\\common\\util.py",
+        "_sources\\util_e7af186ab5010f8f397bd130ca630f8e.py"
+      ],
+      [
+        "tf2marl\\multiagent\\__init__.py",
+        "_sources\\__init___5bd42acbde1ad76ba49d7937cab56f12.py"
+      ],
+      [
+        "tf2marl\\multiagent\\environment.py",
+        "_sources\\environment_d24eede43e3cadf8a5a9f95f704bf8d8.py"
+      ],
+      [
+        "train.py",
+        "_sources\\train_d3ed83afc138e7d6be6ff7b0c9e41e21.py"
+      ]
+    ]
+  },
+  "heartbeat": "2022-07-30T18:31:51.954814",
+  "host": {
+    "ENV": {},
+    "cpu": "Unknown",
+    "gpus": {
+      "driver_version": "512.77",
+      "gpus": [
+        {
+          "model": "NVIDIA GeForce RTX 3070",
+          "persistence_mode": false,
+          "total_memory": 8192
+        }
+      ]
+    },
+    "hostname": "DESKTOP-M48ULUG",
+    "os": [
+      "Windows",
+      "Windows-10-10.0.22000-SP0"
+    ],
+    "python_version": "3.9.12"
+  },
+  "meta": {
+    "command": "train",
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": null,
+      "--force": false,
+      "--help": false,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [],
+      "help": false,
+      "with": false
+    }
+  },
+  "resources": [],
+  "result": null,
+  "start_time": "2022-07-30T17:49:38.122903",
+  "status": "INTERRUPTED",
+  "stop_time": "2022-07-30T18:31:51.978819"
+}

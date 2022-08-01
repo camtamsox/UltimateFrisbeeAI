@@ -1,0 +1,14 @@
+{'exp_name': 'default', 'display': False, 'restore_fp': None, 'save_rate': 10, 'scenario_name': 'ultimate_frisbee', 'num_episodes': 6000, 'max_episode_len': 10000, 'good_policy': 'matd3', 'adv_policy': 'matd3', 'lr': 0.01, 'gamma': 0.95, 'batch_size': 1024, 'num_layers': 2, 'num_units': 64, 'update_rate': 100, 'critic_zero_if_done': False, 'buff_size': 100000.0, 'tau': 0.01, 'hard_max': False, 'priori_replay': False, 'alpha': 0.6, 'beta': 0.5, 'use_target_action': True, 'policy_update_rate': 1, 'critic_action_noise_stddev': 0.0, 'action_noise_clip': 0.5, 'entropy_coeff': 0.05, 'num_atoms': 51, 'min_val': -400, 'max_val': 0, 'seed': 473932327}
+C:\Users\camta\miniconda3\lib\site-packages\keras\optimizers\optimizer_v2\adam.py:110: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
+  super(Adam, self).__init__(name, **kwargs)
+Using good policy matd3 and adv policy matd3
+43
+Starting iterations...
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\fromnumeric.py:3432: RuntimeWarning: Mean of empty slice.
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\Users\camta\miniconda3\lib\site-packages\numpy\core\_methods.py:190: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+steps: 10052, episodes: 10, mean episode reward: -10515.555555555555, agent episode reward: [-7573.444444444444, -7514.0, -2005.111111111111, -7490.111111111111, -7550.111111111111, -7549.0, -2005.111111111111, 4495.111111111111, 4425.666666666667, 4465.666666666667, 4475.111111111111, 4424.0, 4461.777777777777, 4424.0], time: 110.484
+steps: 10128, episodes: 20, mean episode reward: 62864.444444444445, agent episode reward: [-1034.0, -1007.3333333333334, -1007.3333333333334, -1007.3333333333334, -1007.3333333333334, -1007.3333333333334, -1007.3333333333334, 10007.333333333334, 9971.777777777777, 10007.333333333334, 10007.333333333334, 9970.666666666666, 10007.333333333334, 9970.666666666666], time: 1.598
+steps: 20165, episodes: 30, mean episode reward: -10485.0, agent episode reward: [-7554.0, -7514.0, -2004.0, -7490.666666666667, -7549.555555555556, -7549.0, -2004.0, 4494.0, 4430.111111111111, 4464.555555555556, 4474.0, 4428.444444444444, 4460.666666666667, 4428.444444444444], time: 109.601
+steps: 50189, episodes: 40, mean episode reward: -162727.77777777778, agent episode reward: [-20627.555555555555, -20529.777777777777, -9440.333333333334, -20463.666666666668, -20639.222222222223, -20636.444444444445, -4002.5555555555557, -6527.444444444444, -6676.888888888889, -6615.777777777777, -6587.444444444444, -6676.888888888889, -6627.444444444444, -6676.333333333333], time: 332.942

@@ -1,5 +1,5 @@
 import numpy as np
-from tf2marl.multiagent.core import World, Agent, Landmark
+from tf2marl.multiagent.core import World, Agent
 from tf2marl.multiagent.scenario import BaseScenario
 from random import randint
 
@@ -21,7 +21,9 @@ class Scenario(BaseScenario):
         world.player_step_size = 1.
         world.done = False
         world.turnover = False
-        world.catch_frisbee_probability = 0.9
+        world.catch_frisbee_probability = 1
+        world.steps_for_stall = 2 # if player has frisbee for more than steps_for_stall steps, "stall" occurs and turnover happens
+        world.current_stall = 0
 
         # add agents
         world.agents = [Agent() for i in range(num_agents)]
@@ -33,21 +35,23 @@ class Scenario(BaseScenario):
         return world
 
     def reset_world(self, world):
-        # evenly separate along front of endzone
+        
         world.done = False
         world.turnover = False
+        world.current_stall = 0
+        # evenly separate along front of endzones
         for i in range(world.num_agents):
             if world.agents[i].is_offense:
-                world.agents[i].x = world.field_width/(world.num_agents+1) * (i+1)
+                world.agents[i].x = world.field_width/(world.agents_per_team+1) * (i+1)
                 world.agents[i].y = world.endzone_length
             else:
-                world.agents[i].x = world.field_width/(world.num_agents+1) * (i+1)
+                world.agents[i].x = world.field_width/(world.agents_per_team+1) * (i+1-world.agents_per_team)
                 world.agents[i].y = world.field_length - world.endzone_length
         
         # randomly choose who gets frisbee
         for i in range(world.num_agents):
             world.agents[i].has_frisbee = False
-        player_with_frisbee = randint(0, world.num_agents-1)
+        player_with_frisbee = randint(0, world.agents_per_team-1)
         world.agents[player_with_frisbee].has_frisbee = True
 
     # return all agents that are not adversaries
@@ -67,7 +71,7 @@ class Scenario(BaseScenario):
         offense_agents = self.good_agents(world)
         for offense_agent in offense_agents:
             if offense_agent.has_frisbee and offense_agent.y > world.field_length:
-                reward -= 1000
+                reward -= 10000
                 world.done = True
 
         # check if player is in bounds
@@ -76,22 +80,22 @@ class Scenario(BaseScenario):
         
         # check if turnover has occured
         if world.turnover:
-            reward += 10000
+            reward += 1000
             world.done = True
             #print('done: turnover')
 
         return reward
 
     def offense_reward(self, agent, world):
-        reward = -1
+        reward = 1
 
         # check if offense has frisbee in endzone
         offense_agents = self.good_agents(world)
         for offense_agent in offense_agents:
-            if offense_agent.has_frisbee and offense_agent.y > world.field_length - world.endzone_length:
+            if offense_agent.has_frisbee and offense_agent.y > (world.field_length - world.endzone_length):
                 reward += 10000
                 world.done = True
-                #print('done: frisbee in endzone')
+                print('done: frisbee in endzone')
 
         # check if player is in bounds
         if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.field_length:
