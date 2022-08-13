@@ -34,9 +34,9 @@ def train_config():
     exp_name = 'default'            # name for logging
 
     display = False                 # render environment
-    restore_fp = 'results/sacred/77/models'               # path to restore models from, e.g.
+    restore_fp = None               # path to restore models from, e.g.
                                     # 'results/sacred/182/models', or None to train a new model
-    save_rate = 10                  # frequency to save policy as number of episodes
+    save_rate = 1000                  # frequency to save policy as number of episodes
 
     # Environment
     scenario_name = 'ultimate_frisbee' # environment name

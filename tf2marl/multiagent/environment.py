@@ -2,7 +2,6 @@ import gym
 from gym import spaces
 import numpy as np
 
-from tf2marl.multiagent.multi_discrete import MultiDiscrete
 
 # environment for all agents in the multiagent world
 # currently code assumes that no agents will be created/destroyed at runtime!
@@ -32,7 +31,7 @@ class MultiAgentEnv(gym.Env):
         self.observation_space = []
         for agent in self.agents:
 
-            self.action_space.append(spaces.Discrete(18)) # direction to change (9) + throw frisbee (2) who to throw to + (7)
+            self.action_space.append(spaces.Discrete(16)) # direction to change (9) + who to throw to + (7)
 
             obs_dim = len(observation_callback(self.world))
             self.observation_space.append(spaces.Box(low=-np.inf, high=+np.inf, shape=(obs_dim,), dtype=np.float32))
@@ -113,11 +112,7 @@ class MultiAgentEnv(gym.Env):
     def _set_action(self, action, agent):
         # action array is softmax with each value representing one posibility in action space
         agent.direction_to_change = np.argmax(action[0:8])
-        if action[9] > action[10]: # action[9] means throw
-            agent.throw = True
-        else:
-            agent.throw = False
-        agent.target_player_num = np.argmax(action[11:18])
+        agent.target_player_num = np.argmax(action[9:16])
 
 
 

@@ -21,7 +21,7 @@ class Scenario(BaseScenario):
         world.player_step_size = 1.
         world.done = False
         world.turnover = False
-        world.catch_frisbee_probability = 1
+        world.catch_frisbee_probability = 1.
         world.steps_for_stall = 2 # if player has frisbee for more than steps_for_stall steps, "stall" occurs and turnover happens
         world.current_stall = 0
 
