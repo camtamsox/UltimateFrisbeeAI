@@ -26,9 +26,12 @@ green = '0x023d03'
 screen = pygame.display.set_mode((scale*width,scale*height))
 
 done = False
-time.sleep(2)
 print('playing game of %d steps' %game_history.shape[0])
-#print(game_history[3])
+
+# remove agent num from states
+game_history = game_history.tolist()
+for state in game_history:
+    del state[0]
 
 # check if someone has frisbee in every step
 def check_frisbee_disappears():
@@ -41,9 +44,9 @@ def check_frisbee_disappears():
                 frisbee_in_state = True
         if not frisbee_in_state:
             print('frisbee not in state %d' %state_value)
-            return
+            
         state_value += 1
-    
+    return
 check_frisbee_disappears()
 for state in game_history:
     screen.fill(green)

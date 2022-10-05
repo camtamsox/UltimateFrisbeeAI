@@ -14,7 +14,6 @@ class AgentState():
 class Action(object):
     def __init__(self):
         self.direction_to_change = None
-        self.throw = None
         self.target_player_num = None
 
 
@@ -41,6 +40,7 @@ class World(object):
     def __init__(self):
         # list of agents and entities (can change at execution-time!)
         self.agents = []
+        self.prev_agent_num = None
 
 
     # return all entities in the world
@@ -64,7 +64,6 @@ class World(object):
         self.move_agents()
         self.throw_frisbee()
         self.check_in_bounds()
-        self.check_stall()
 
     def move_agents(self):
         for agent in self.agents:
@@ -101,26 +100,33 @@ class World(object):
     def throw_frisbee(self):
         agent_num = 0
         for agent in self.agents:
-            if agent.has_frisbee and agent.throw:
-                # probability of catching, target agent must be in bounds, target must be different than thrower
-                if random() < self.catch_frisbee_probability:
-                    self.current_stall = 0
+            if agent.has_frisbee:
+                # agent must throw frisbee
+                if self.prev_agent_num == agent_num:
+                    self.turnover = True
+                    agent.has_frisbee = False
+                else:
+                    self.prev_agent_num = agent_num
+                    
+                # set distance from endzone
+                self.offense_distance_from_endzone = (self.field_length - self.endzone_length) - agent.y
+
+                # throw frisbee
+                if random() < self.catch_frisbee_probability and agent.target_player_num is not agent_num:
                     agent.has_frisbee = False
                     self.agents[agent.target_player_num].has_frisbee = True
-
-                elif agent.target_player_num is not agent_num:
+                elif agent.target_player_num != agent_num:
                     self.turnover = True
                     agent.has_frisbee = False
                 return
             agent_num += 1
+        for _ in range(100):
+            print('frisbee not in state')
+
     def check_in_bounds(self):
         for agent in self.agents:
             if agent.has_frisbee and (agent.x < 0. or agent.x > self.field_width or agent.y < 0. or agent.y > self.field_length):
                 self.turnover = True
                 agent.has_frisbee = False
                 return
-    def check_stall(self):
-        self.current_stall += 1
-        if self.current_stall >= self.steps_for_stall:
-            self.turnover = True
 

@@ -22,8 +22,7 @@ class Scenario(BaseScenario):
         world.done = False
         world.turnover = False
         world.catch_frisbee_probability = 1.
-        world.steps_for_stall = 2 # if player has frisbee for more than steps_for_stall steps, "stall" occurs and turnover happens
-        world.current_stall = 0
+        world.offense_distance_from_endzone = world.field_length - world.endzone_length
 
         # add agents
         world.agents = [Agent() for i in range(num_agents)]
@@ -67,12 +66,13 @@ class Scenario(BaseScenario):
 
     def defense_reward(self, agent, world):
         reward = 1
-        # check if offense has frisbee in endzone
         offense_agents = self.good_agents(world)
         for offense_agent in offense_agents:
-            if offense_agent.has_frisbee and offense_agent.y > world.field_length:
+            if offense_agent.has_frisbee and offense_agent.y > world.field_length: # check if offense has frisbee in endzone
                 reward -= 10000
                 world.done = True
+        distance_covered_by_offense = (world.field_length - world.endzone_length * 2) - world.offense_distance_from_endzone
+        reward -= distance_covered_by_offense
 
         # check if player is in bounds
         if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.field_length - world.endzone_length:
@@ -87,7 +87,7 @@ class Scenario(BaseScenario):
         return reward
 
     def offense_reward(self, agent, world):
-        reward = 1
+        reward = 0 # should be negative to encourage offensive efficiency
 
         # check if offense has frisbee in endzone
         offense_agents = self.good_agents(world)
@@ -95,7 +95,8 @@ class Scenario(BaseScenario):
             if offense_agent.has_frisbee and offense_agent.y > (world.field_length - world.endzone_length):
                 reward += 10000
                 world.done = True
-                print('done: frisbee in endzone')
+        distance_covered_by_offense = (world.field_length - world.endzone_length * 2) - world.offense_distance_from_endzone
+        reward += distance_covered_by_offense
 
         # check if player is in bounds
         if agent.x < 0 or agent.x > world.field_width or agent.y < 0 or agent.y > world.field_length:
@@ -108,8 +109,9 @@ class Scenario(BaseScenario):
         return reward
 
 
-    def observation(self, world):
+    def observation(self, agent_num, world):
         observation = []
+        observation.append(agent_num)
         for agent in world.agents:
             observation.append(agent.x)
             observation.append(agent.y)
