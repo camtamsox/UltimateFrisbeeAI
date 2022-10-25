@@ -4,7 +4,7 @@ import time
 import os
 
 # load
-with open('test_game.npy', 'rb') as f:
+with open('500k_episodes_example_game.npy', 'rb') as f:
     game_history = np.load(f,allow_pickle=True)
 
 pygame.init()
@@ -28,26 +28,6 @@ screen = pygame.display.set_mode((scale*width,scale*height))
 done = False
 print('playing game of %d steps' %game_history.shape[0])
 
-# remove agent num from states
-game_history = game_history.tolist()
-for state in game_history:
-    del state[0]
-
-# check if someone has frisbee in every step
-def check_frisbee_disappears():
-    state_value = 0
-    for state in game_history:
-        frisbee_in_state = False
-        for i in range(0,num_players_per_team*attributes_per_player,attributes_per_player): # offense
-            player_has_frisbee = state[i+2]
-            if player_has_frisbee:
-                frisbee_in_state = True
-        if not frisbee_in_state:
-            print('frisbee not in state %d' %state_value)
-            
-        state_value += 1
-    return
-check_frisbee_disappears()
 for state in game_history:
     screen.fill(green)
     # boundaries

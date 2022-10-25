@@ -35,7 +35,7 @@ def train_config():
     exp_name = 'default'            # name for logging
 
     display = False                 # render environment
-    restore_fp = 'results/sacred/14/models'               # path to restore models from, e.g.
+    restore_fp = None               # path to restore models from, e.g.
                                     # 'results/sacred/182/models', or None to train a new model
     save_rate = 100000                  # frequency to save policy as number of episodes
 
@@ -136,12 +136,8 @@ def train(_run, exp_name, save_rate, display, restore_fp,
     if restore_fp is not None:
         print('Loading previous state...')
         for ag_idx, agent in enumerate(agents):
-            if ag_idx < env.agents_per_team:
-                model_to_load = randint(0,env.agents_per_team-1)
-                fp = os.path.join(restore_fp, 'agent_{}'.format(model_to_load)) # one model for offense, one for defense. Choose which one to load randomly
-            else:
-                model_to_load = randint(env.agents_per_team,env.n-1)
-                fp = os.path.join(restore_fp, 'agent_{}'.format(model_to_load))
+            fp = os.path.join(restore_fp, 'agent_{}'.format(ag_idx))
+            
             agent.load(fp)
 
     obs_n = env.reset()
