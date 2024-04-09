@@ -8,6 +8,7 @@ A visualization of the inputs and outputs of the algorithm.
 In my program, I decided to first use a simplified version of ultimate frisbee and then work up to a more realistic version as the AI learned more. In this simplification, the frisbee did not spend any time in the air, the AI was always accurate, and the defense did not have any effect on the game. This means that the only way the offense could lose is if they held the frisbee for too long or threw it to someone out of bounds. To predict where it should move or throw the frisbee, the algorithm (a neural network) was given the position of each player and which player had the frisbee.
 
 ![image](https://github.com/camtamsox/MovingSofa/assets/109252429/9ba88f68-63f3-47c4-8f07-6c046674914d)
+
 A depiction of the neural network of the AI.
 
 After I got the code to work, I trained the algorithm for thousands of games. However, even after experimenting with different hyperparameters, I could not get the algorithm to learn anything meaningful. A typical game is shown below.
